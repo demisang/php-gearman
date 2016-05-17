@@ -290,12 +290,12 @@ class GearmanQueue
     /**
      * Deserialize task params
      *
-     * @param string $params
+     * @param string $workload
      *
      * @return array Deserialized string
      */
-    public function deserializeWorkload($params)
+    public function deserializeWorkload($workload)
     {
-        return json_decode($params, true);
+        return json_decode($workload, true);
     }
 }

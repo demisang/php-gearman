@@ -1,6 +1,6 @@
 <?php
 
-namespace demi\gearman\yii2;
+namespace demi\gearman\yii1;
 
 use demi\gearman\GearmanQueue;
 use demi\gearman\SupervisorConfig;
@@ -22,7 +22,7 @@ use demi\gearman\SupervisorConfig;
  * @method mixed serializeWorkload() serializeWorkload(Array $params = []) Serialize task params
  * @method mixed deserializeWorkload() deserializeWorkload(string $workload = []) Deserialize task params
  */
-class Component extends \yii\base\Component
+class GearmanComponent extends \CApplicationComponent
 {
     /**
      * Gearman server host
@@ -41,7 +41,7 @@ class Component extends \yii\base\Component
      *
      * @var array array('123.134.156.245:4730', '178.214.52.184:4730'), ...
      */
-    public $servers = [];
+    public $servers = array();
     /**
      * Callacble function, running on before worker job handler call
      * function ($jobName, \GearmanJob $job) {
@@ -107,14 +107,14 @@ class Component extends \yii\base\Component
      */
     public function init()
     {
+        parent::init();
+
         // Initialize queue component
         $queue = new GearmanQueue($this->host, $this->port, $this->servers);
         $queue->beforeJobCallback = $this->beforeJobCallback;
         $queue->afterJobCallback = $this->afterJobCallback;
 
         $this->_queue = $queue;
-
-        parent::init();
     }
 
     /**
