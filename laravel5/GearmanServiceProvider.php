@@ -2,9 +2,6 @@
 
 namespace demi\gearman\laravel5;
 
-use demi\gearman\GearmanQueue;
-use demi\gearman\SupervisorConfig;
-
 /**
  * Gearman aueue service provider
  */
@@ -30,19 +27,5 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             __DIR__ . '/config/gearman.php' => base_path('config/gearman'),
         ], 'config');
-    }
-
-    /**
-     * Run supervisor configurator
-     */
-    public static function configureSupervisor()
-    {
-        $config = config('gearman.supervisorConfig');
-        $supervisor = new SupervisorConfig($config['configFile'], $config['workersDirectory']);
-        $supervisor->restartSleepingTime = $config['restartSleepingTime'];
-        $supervisor->workersConfig = $config['all'];
-        $supervisor->workersSets = $config['sets'];
-
-        $supervisor->requestUpdate();
     }
 }

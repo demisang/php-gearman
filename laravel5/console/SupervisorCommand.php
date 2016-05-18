@@ -2,6 +2,8 @@
 
 namespace demi\gearman\laravel5\console;
 
+use demi\gearman\SupervisorConfig;
+
 /**
  * Supervisor config command
  */
@@ -27,6 +29,12 @@ class SupervisorCommand extends \Illuminate\Console\Command
      */
     public function fire()
     {
-        \Gearman::configureSupervisor();
+        $config = config('gearman.supervisorConfig');
+        $supervisor = new SupervisorConfig($config['configFile'], $config['workersDirectory']);
+        $supervisor->restartSleepingTime = $config['restartSleepingTime'];
+        $supervisor->workersConfig = $config['all'];
+        $supervisor->workersSets = $config['sets'];
+
+        $supervisor->requestUpdate();
     }
 }
