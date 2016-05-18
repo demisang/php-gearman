@@ -25,7 +25,7 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/config/gearman.php' => base_path('config/gearman'),
+            __DIR__ . '/config/gearman.php' => base_path('config/gearman.php'),
         ], 'config');
     }
 }
