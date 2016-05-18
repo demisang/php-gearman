@@ -20,10 +20,13 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $this->app->singleton('gearman', function ($app) {
-            $config = config('gearman');
-            $component = new \demi\gearman\GearmanQueue($config['host'], $config['port'], $config['servers']);
-            $component->beforeJobCallback = $config['beforeJobCallback'];
-            $component->afterJobCallback = $config['afterJobCallback'];
+            $component = new \demi\gearman\GearmanQueue(
+                config('gearman.host', '127.0.0.1'),
+                config('gearman.port', 4730),
+                config('gearman.servers', [])
+            );
+            $component->beforeJobCallback = config('gearman.beforeJobCallback');
+            $component->afterJobCallback = config('gearman.afterJobCallback');
 
             return $component;
         });
@@ -39,7 +42,7 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $this->publishes(array(
-            __DIR__.'/config/gearman.php' => config_path('gearman.php'),
+            __DIR__ . '/config/gearman.php' => config_path('gearman.php'),
         ), 'config');
     }
 
