@@ -14,6 +14,7 @@ composer require "demi/php-gearman" "~1.0"
 ```bash
 apt-get install supervisor
 ```
+* (optional) Install Gearman GUI: http://gaspaio.github.io/gearmanui
 
 
 Configuration
@@ -48,7 +49,7 @@ return [
 ## Gearman component configuration
 
 ### Yii2
-common/config/main.php:
+/common/config/main.php:
 ```php
 'components' => [
     'gearman' => [
@@ -59,7 +60,7 @@ common/config/main.php:
     ],
 ];
 ```
-console/config/main.php:
+/console/config/main.php:
 ```php
 return [
     'controllerMap' => [
@@ -73,7 +74,7 @@ return [
 
 
 ### Yii1
-protected/config/main.php:
+/protected/config/main.php:
 ```php
 'components' => [
     'gearman' => [
@@ -84,7 +85,7 @@ protected/config/main.php:
     ],
 ];
 ```
-protected/config/console.php:
+/protected/config/console.php:
 ```php
 return [
     'commandMap' => [
@@ -102,7 +103,81 @@ coming soon...
 
 Usage
 -----
-#### Change supervisor config set and restart supervisor:
+### Running workers:
+Gearman workers - it is simple looped console commands
+
+##### Yii2:
+Create new console controller<br />
+/console/controllers/WorkersController.php:
+```php
+<?php
+
+namespace console\controllers;
+
+use Yii;
+use GearmanJob;
+
+/**
+ * Gearman workers
+ */
+class WorkersController extends \yii\console\Controller
+{
+    /**
+     * Crop image worker
+     */
+    public function actionCropImage()
+    {
+        Yii::$app->gearman->runWorker('crop_image', function (GearmanJob $job) {
+            $workload = Yii::$app->gearman->deserializeWorkload($job->workload());
+            $imagePath = $workload['image_path'];
+            if (empty($imagePath)) {
+                return Yii::$app->gearman->serializeWorkload(['status' => 'error', 'message' => 'No image']);
+            }
+
+            // Do some job...
+
+            return Yii::$app->gearman->serializeWorkload(['status' => 'success', 'foo' => 'bar']);
+        });
+    }
+}
+````
+
+##### Yii1:
+Create new console controller<br />
+/protected/commands/WorkersCommand.php:
+```php
+<?php
+
+/**
+ * Gearman workers
+ */
+class WorkersController extends CConsoleCommand
+{
+    /**
+     * Crop image worker
+     */
+    public function actionCropImage()
+    {
+        Yii::app()->gearman->runWorker('crop_image', function (GearmanJob $job) {
+            $workload = Yii::app()->gearman->deserializeWorkload($job->workload());
+            $imagePath = $workload['image_path'];
+            if (empty($imagePath)) {
+                return Yii::app()->gearman->serializeWorkload(['status' => 'error', 'message' => 'No image']);
+            }
+
+            // Do some job...
+
+            return Yii::app()->gearman->serializeWorkload(['status' => 'success', 'foo' => 'bar']);
+        });
+    }
+}
+````
+
+##### Laravel:
+coming soon...
+
+
+### Change supervisor config set and restart supervisor:
 Yii2:
 ```bash
 php yii gearman
@@ -118,3 +193,45 @@ Laravel:
 php artisan gearman
 ````
 
+
+Examples
+--------
+##### Yii2:
+In any place:
+```php
+// synchronous
+$result = Yii::$app->gearman->doNormal('crop_image', ['image_path' => '/var/www/image.jpg']);
+var_dump(Yii::$app->gearman->deserializeWorkload($result)); // ['status' => 'success', 'foo' => 'bar']
+$result = Yii::$app->gearman->doNormal('crop_image');
+var_dump(Yii::$app->gearman->deserializeWorkload($result)); // ['status' => 'error', 'message' => 'No image']
+
+// asynchronous
+$result = Yii::$app->gearman->doBackground('crop_image', ['image_path' => '/var/www/image.jpg']);
+var_dump($result); // job handle file descriptior
+$result = Yii::$app->gearman->doBackground('crop_image');
+var_dump($result); // job handle file descriptior
+
+// Variants:
+// doLow(), doNormal(), doHigh(),
+// doLowBackground(), doBackground(), doHighBackground(),
+```
+
+##### Yii1:
+In any place:
+```php
+// synchronous
+$result = Yii::app()->gearman->doNormal('crop_image', ['image_path' => '/var/www/image.jpg']);
+var_dump(Yii::app()->gearman->deserializeWorkload($result)); // ['status' => 'success', 'foo' => 'bar']
+$result = Yii::app()->gearman->doNormal('crop_image');
+var_dump(Yii::app()->gearman->deserializeWorkload($result)); // ['status' => 'error', 'message' => 'No image']
+
+// asynchronous
+$result = Yii::app()->gearman->doBackground('crop_image', ['image_path' => '/var/www/image.jpg']);
+var_dump($result); // job handle file descriptior
+$result = Yii::app()->gearman->doBackground('crop_image');
+var_dump($result); // job handle file descriptior
+
+// Variants:
+// doLow(), doNormal(), doHigh(),
+// doLowBackground(), doBackground(), doHighBackground(),
+```

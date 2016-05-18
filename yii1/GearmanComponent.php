@@ -11,6 +11,8 @@ use demi\gearman\SupervisorConfig;
  * @property GearmanQueue $queue
  *
  * Magic methods
+ * @method mixed runWorker() runWorker(string $jobName, callable $handler) Register new task handler
+ *
  * @method mixed doLow() doLow(string $taskName, Array $params = []) Runs a single low priority task
  * @method mixed doNormal() doNormal(string $taskName, Array $params = []) Runs a single task
  * @method mixed doHigh() doHigh(string $taskName, Array $params = []) Runs a single high priority task
@@ -122,7 +124,7 @@ class GearmanComponent extends \CApplicationComponent
      */
     public function __call($name, $params)
     {
-        if (substr($name, 0, 2) === 'do' || strpos($name, 'serialize') !== false) {
+        if ($name === 'runWorker' || substr($name, 0, 2) === 'do' || strpos($name, 'serialize') !== false) {
             return call_user_func_array([$this->queue, $name], $params);
         }
 
