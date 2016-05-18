@@ -100,20 +100,20 @@ class SupervisorConfig
         $sets = $this->workersSets;
 
         // Show info about available sets
-        $this->stdout("\nWorkers sets:\n");
+        static::stdout("\nWorkers sets:\n");
 
         $i = 0;
         $setNumKeys = [];
         foreach ($sets as $name => $config) {
             $i++;
             $setNumKeys[$i] = $name;
-            $this->stdout($i . '. ' . $name . "\n");
+            static::stdout($i . '. ' . $name . "\n");
         }
 
         // Get number of selected set
         $setNum = $this->prompt("\nChoise worker set:", ['required' => true]);
         if (!isset($setNumKeys[$setNum])) {
-            $this->stdout("Set '$setNum' not exists\n", static::FG_RED);
+            static::stdout("Set '$setNum' not exists\n", static::FG_RED);
 
             return;
         }
@@ -123,7 +123,7 @@ class SupervisorConfig
             $workers[$workerId]['numprocs'] = $numprocs;
         }
 
-        $this->stdout("\nActive workers:\n");
+        static::stdout("\nActive workers:\n");
         // Generate config file lines
         $lines = [];
         foreach ($workers as $workerId => $config) {
@@ -144,14 +144,14 @@ class SupervisorConfig
 
             // Show info about active workers
             if ($resultConfig['numprocs'] > 0) {
-                $this->stdout("$workerId: " . $resultConfig['numprocs'] . "\n", static::FG_GREEN);
+                static::stdout("$workerId: " . $resultConfig['numprocs'] . "\n", static::FG_GREEN);
             }
         }
 
         // Rewrite config file
         $f = @fopen($this->configFile, 'w');
         if (!$f) {
-            $this->stdout("Cannot open config file '$this->configFile' for write\n", static::FG_RED);
+            static::stdout("Cannot open config file '$this->configFile' for write\n", static::FG_RED);
 
             return;
         }
@@ -161,17 +161,17 @@ class SupervisorConfig
             fwrite($f, $line . PHP_EOL);
         }
         fclose($f);
-        $this->stdout("\nConfig file saved\n", static::FG_GREEN);
+        static::stdout("\nConfig file saved\n", static::FG_GREEN);
 
         // Stop supervisor service
         $shellResult = trim(shell_exec('service supervisor stop'));
-        $this->stdout("Supervisor stopped, waiting $this->restartSleepingTime seconds..." .
+        static::stdout("Supervisor stopped, waiting $this->restartSleepingTime seconds..." .
             (!empty($shellResult) ? " ($shellResult)" : '') . "\n", static::FG_GREEN);
         // Snooze, because supervisor must rest before work...
         sleep($this->restartSleepingTime);
         // Start supervisor service
         $shellResult = trim(shell_exec('service supervisor start'));
-        $this->stdout('Supervisor started' . (!empty($shellResult) ? " ($shellResult)" : '') . "\n", static::FG_GREEN);
+        static::stdout('Supervisor started' . (!empty($shellResult) ? " ($shellResult)" : '') . "\n", static::FG_GREEN);
     }
 
     /**
@@ -183,14 +183,14 @@ class SupervisorConfig
      * Example:
      *
      * ~~~
-     * $this->stdout('This will be red and underlined.', Console::FG_RED, Console::UNDERLINE);
+     * static::stdout('This will be red and underlined.', Console::FG_RED, Console::UNDERLINE);
      * ~~~
      *
      * @param string $string the string to print
      *
      * @return int|boolean Number of bytes printed or false on error
      */
-    protected function stdout($string)
+    protected static function stdout($string)
     {
         $args = func_get_args();
         array_shift($args);

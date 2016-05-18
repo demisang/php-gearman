@@ -19,7 +19,7 @@ apt-get install supervisor
 
 Configuration
 -------------
-### Yii1/Yii2/Laravel:
+### Yii1/Yii2:
 supervisor.php at you common config dir:
 ```php
 return [
@@ -98,7 +98,18 @@ return [
 ```
 
 ### Laravel:
-coming soon...
+Publish /config/gearman.php
+```bash
+php artisan vendor:publish --provider="demi\gearman\laravel5\GearmanServiceProvider" --tag=config
+```
+
+Add service provider to /config/app.php:
+```php
+'providers' => [
+    // Gearman helper
+    demi\gearman\laravel5\GearmanServiceProvider::class
+]
+```
 
 
 Usage

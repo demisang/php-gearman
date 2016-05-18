@@ -8,6 +8,13 @@ namespace demi\gearman\laravel5;
 class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
+
+    /**
      * @inheritdoc
      */
     public function register()
@@ -20,12 +27,29 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
 
             return $component;
         });
+
+        $this->app['command.gearman'] = $this->app->share(
+            function ($app) {
+                return new \demi\gearman\laravel5\console\SupervisorCommand();
+            }
+        );
+        $this->commands('command.gearman');
     }
 
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/config/gearman.php' => base_path('config/gearman.php'),
-        ], 'config');
+        $this->publishes(array(
+            __DIR__.'/config/gearman.php' => config_path('gearman.php'),
+        ), 'config');
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('gearman-queue', 'command.gearman');
     }
 }
