@@ -33,7 +33,7 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app['command.gearman'] = $this->app->share(
             function ($app) {
-                return new \demi\gearman\laravel5\console\SupervisorCommand();
+                return new \demi\gearman\laravel5\Console\SupervisorCommand();
             }
         );
         $this->commands('command.gearman');
