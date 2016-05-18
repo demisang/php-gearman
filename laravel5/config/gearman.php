@@ -8,8 +8,8 @@ return [
         'workersDirectory' => '/var/www/site',
         'restartSleepingTime' => 5,
         'all' => [
-            'crop_image' => ['numprocs' => 0, 'command' => '/usr/bin/php artisan workers:crop-image'],
-            'bad_worker' => ['numprocs' => 0, 'command' => '/usr/bin/php artisan workers:bad-worker'],
+            'crop_image' => ['numprocs' => 0, 'command' => '/usr/bin/php artisan worker:crop-image'],
+            'bad_worker' => ['numprocs' => 0, 'command' => '/usr/bin/php artisan worker:bad-worker'],
         ],
         'sets' => [
             'general' => [
