@@ -5,10 +5,16 @@ Gearman job server workers helper
 
 Installation
 ------------
-Run
+* Run:
 ```code
 composer require "demi/php-gearman" "~1.0"
 ```
+* Install gearman job server as PHP-extension: http://gearman.org/getting-started/#gearman_php_extension<br />
+* Install supervisor:
+```bash
+apt-get install supervisor
+```
+
 
 Configuration
 -------------
