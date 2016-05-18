@@ -108,7 +108,11 @@ Add service provider to /config/app.php:
 'providers' => [
     // Gearman helper
     demi\gearman\laravel5\GearmanServiceProvider::class
-]
+],
+'aliases' => [
+    // Gearman helper
+    'Gearman' => demi\gearman\laravel5\GearmanFacade::class,
+],
 ```
 
 
