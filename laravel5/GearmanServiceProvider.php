@@ -33,18 +33,6 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * @inheritdoc
-     */
-    public function __call($name, $params)
-    {
-        if ($name === 'runWorker' || substr($name, 0, 2) === 'do' || strpos($name, 'serialize') !== false) {
-            return call_user_func_array([$this->queue, $name], $params);
-        }
-
-        return parent::__call($name, $params);
-    }
-
-    /**
      * Run supervisor configurator
      */
     public static function configureSupervisor()
