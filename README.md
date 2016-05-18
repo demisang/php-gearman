@@ -143,7 +143,7 @@ class WorkersController extends \yii\console\Controller
 ````
 
 ##### Yii1:
-Create new console controller<br />
+Create new console command<br />
 /protected/commands/WorkersCommand.php:
 ```php
 <?php
@@ -151,7 +151,7 @@ Create new console controller<br />
 /**
  * Gearman workers
  */
-class WorkersController extends CConsoleCommand
+class WorkersCommand extends CConsoleCommand
 {
     /**
      * Crop image worker
