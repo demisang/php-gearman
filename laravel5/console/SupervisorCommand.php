@@ -19,7 +19,7 @@ class SupervisorCommand extends \Illuminate\Console\Command
      *
      * @var string
      */
-    protected $description = 'Generate a new IDE Helper file.';
+    protected $description = 'Run supervisor configurator';
 
     /**
      * Execute the console command.
