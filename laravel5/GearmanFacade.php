@@ -3,9 +3,9 @@
 namespace demi\gearman\laravel5;
 
 /**
- * Class Gearman
+ * Gearman facade
  */
-class Gearman extends \Illuminate\Support\Facades\Facade
+class GearmanFacade extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.
@@ -14,6 +14,6 @@ class Gearman extends \Illuminate\Support\Facades\Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'gearman-queue';
+        return 'gearman';
     }
 }

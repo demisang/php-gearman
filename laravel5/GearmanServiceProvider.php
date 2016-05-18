@@ -19,7 +19,7 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('gearman-queue', function ($app) {
+        $this->app->singleton('gearman', function ($app) {
             $config = config('gearman');
             $component = new \demi\gearman\GearmanQueue($config['host'], $config['port'], $config['servers']);
             $component->beforeJobCallback = $config['beforeJobCallback'];
@@ -50,6 +50,6 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function provides()
     {
-        return array('gearman-queue', 'command.gearman');
+        return array('gearman', 'command.gearman');
     }
 }
