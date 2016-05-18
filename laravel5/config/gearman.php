@@ -5,7 +5,7 @@ return [
     'port' => 4730,
     'supervisorConfig' => [
         'configFile' => '/etc/supervisor/conf.d/workers.conf',
-        'workersDirectory' => '/var/www/site',
+        'workersDirectory' => realpath(__DIR__ . '/../'),
         'restartSleepingTime' => 5,
         'all' => [
             'crop_image' => ['numprocs' => 0, 'command' => '/usr/bin/php artisan worker:crop-image'],
