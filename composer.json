@@ -1,7 +1,17 @@
 {
     "name": "demi/php-gearman",
     "description": "Gearman job server workers helper",
-    "keywords": ["php", "gearman", "job", "server", "workers", "supervisor"],
+    "keywords": [
+        "php",
+        "gearman",
+        "job",
+        "server",
+        "workers",
+        "supervisor",
+        "Yii1",
+        "Yii2",
+        "Laravel"
+    ],
     "homepage": "https://github.com/demisang/php-gearman#readme",
     "type": "library",
     "license": "GNU",
@@ -24,5 +34,8 @@
         "psr-4": {
             "demi\\gearman\\": ""
         }
+    },
+    "suggest": {
+        "ext-gearman": "PHP Gearman extension for running workers"
     }
 }

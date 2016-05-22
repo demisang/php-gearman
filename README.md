@@ -24,7 +24,7 @@ supervisor.php at you common config dir:
 ```php
 return [
     'configFile' => '/etc/supervisor/conf.d/workers.conf',
-    'workersDirectory' => '/var/www/site',
+    'workersDirectory' => realpath(__DIR__ . '/../'),
     'restartSleepingTime' => 5,
     'all' => [
         'crop_image' => ['numprocs' => 0, 'command' => '/usr/bin/php yii workers/crop-image'],
