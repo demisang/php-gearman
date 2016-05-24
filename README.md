@@ -87,6 +87,7 @@ return [
 ```
 /protected/config/console.php:
 ```php
+$mainConfig = require(dirname(__FILE__) . '/main.php');
 return [
     'commandMap' => [
         'gearman' => [
@@ -94,6 +95,10 @@ return [
             'gearmanComponentName' => 'gearman', // name of component: Yii::app()->gearman (from previous config listing)
         ],
     ],
+    'components' => [
+        'gearman' => $mainConfig['components']['gearman'],
+    ],
+
 ],
 ```
 
