@@ -77,7 +77,7 @@ class SupervisorConfig
         $this->defaultWorkerConfig = [
             'command' => '',
             'process_name' => '%(program_name)s_%(process_num)02d',
-            'numprocs' => 30,
+            'numprocs' => 0,
             'directory' => $workersDirectory, // "/var/www/site"
             'stdout_logfile' => '/var/www/logs/workers/%(program_name)s.log',
             'stderr_logfile' => '/var/www/logs/workers/%(program_name)s.error.log',
