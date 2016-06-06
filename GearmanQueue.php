@@ -130,16 +130,16 @@ class GearmanQueue
     {
         $that = $this;
         $workerHandler = function (\GearmanJob $job) use ($jobName, $handler, $that) {
-            // Call before callback
+            // Request before callback
             if (is_callable($that->beforeJobCallback)) {
                 call_user_func($that->beforeJobCallback, $jobName, $job);
             }
 
-            // Call worker handler
+            // Request worker handler
             $handlerResult = call_user_func($handler, $job);
 
             // Work finished
-            // Call after callback
+            // Request after callback
             if (is_callable($that->afterJobCallback)) {
                 call_user_func($that->afterJobCallback, $jobName, $job, $handlerResult);
             }

@@ -103,11 +103,6 @@ return [
 ```
 
 ### Laravel:
-Publish /config/gearman.php
-```bash
-php artisan vendor:publish --provider="demi\gearman\laravel5\GearmanServiceProvider" --tag=config
-```
-
 Add service provider to /config/app.php:
 ```php
 'providers' => [
@@ -118,6 +113,11 @@ Add service provider to /config/app.php:
     // Gearman helper
     'Gearman' => demi\gearman\laravel5\GearmanFacade::class,
 ],
+```
+
+Publish /config/gearman.php
+```bash
+php artisan vendor:publish --provider="demi\gearman\laravel5\GearmanServiceProvider" --tag=config
 ```
 
 
