@@ -58,7 +58,7 @@ return [
         'port' => 4730,
         'supervisorConfig' => require(__DIR__ . '/supervisor.php'),
     ],
-];
+],
 ```
 /console/config/main.php:
 ```php
@@ -83,7 +83,7 @@ return [
         'port' => 4730,
         'supervisorConfig' => require(__DIR__ . '/supervisor.php'),
     ],
-];
+],
 ```
 /protected/config/console.php:
 ```php
@@ -98,7 +98,6 @@ return [
     'components' => [
         'gearman' => $mainConfig['components']['gearman'],
     ],
-
 ],
 ```
 
