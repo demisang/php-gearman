@@ -274,7 +274,7 @@ class GearmanQueue
     /**
      * Serialize task params
      *
-     * @param array $params
+     * @param array|string $params
      *
      * @return string Serialized string
      */
