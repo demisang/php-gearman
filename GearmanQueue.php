@@ -298,4 +298,71 @@ class GearmanQueue
     {
         return json_decode($workload, true);
     }
+
+    /**
+     * Return workers array with info
+     *
+     * example:
+     * [
+     *     'crop_image' => [
+     *         'queued' => 8,
+     *         'running' => 8,
+     *         'available' => 50,
+     *     ],
+     *     'save_file' => [
+     *         'queued' => 150,
+     *         'running' => 10,
+     *         'available' => 10,
+     *     ],
+     * ];
+     *
+     * @return array
+     */
+    public function getStatus()
+    {
+        $command = "(echo status ; sleep 0.1) | netcat $this->host $this->port -w 1";
+        $output = shell_exec($command);
+        if (empty($output)) {
+            return [];
+        }
+
+        $workers = [];
+        $lines = explode(PHP_EOL, $output);
+        foreach ($lines as $line) {
+            $matches = [];
+            preg_match('/([\w]+)[^\d]+(\d+)\s+(\d+)\s+(\d+)/is', $line, $matches);
+            if (!isset($matches[1], $matches[2], $matches[3], $matches[4])) {
+                continue;
+            }
+            list(, $workerName, $queuedJobs, $runningJobs, $availableWorkers) = $matches;
+
+            $workers[$workerName] = [
+                'queued' => (int)$queuedJobs,
+                'running' => (int)$runningJobs,
+                'available' => (int)$availableWorkers,
+            ];
+        }
+
+        return $workers;
+    }
+
+    /**
+     * Get free workers count by worker name
+     *
+     * @param string $workerName 'crop_image'
+     *
+     * @return int|false Free workers count or FALSE if worker does not running
+     */
+    public function getFreeWorkersCount($workerName)
+    {
+        $status = $this->getStatus();
+
+        if (!isset($status[$workerName])) {
+            return false;
+        }
+
+        $free = $status[$workerName]['available'] - $status[$workerName]['running'];
+
+        return $free > 0 ? $free : 0;
+    }
 }

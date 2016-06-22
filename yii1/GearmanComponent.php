@@ -12,6 +12,8 @@ use demi\gearman\SupervisorConfig;
  *
  * Magic methods
  * @method mixed runWorker() runWorker(string $jobName, callable $handler) Register new task handler
+ * @method mixed getStatus() getStatus() Return workers array with info
+ * @method mixed getFreeWorkersCount() getFreeWorkersCount() Get free workers count by worker name
  *
  * @method mixed doLow() doLow(string $taskName, Array $params = []) Runs a single low priority task
  * @method mixed doNormal() doNormal(string $taskName, Array $params = []) Runs a single task
@@ -124,7 +126,10 @@ class GearmanComponent extends \CApplicationComponent
      */
     public function __call($name, $params)
     {
-        if ($name === 'runWorker' || substr($name, 0, 2) === 'do' || strpos($name, 'serialize') !== false) {
+        $available = [
+            'runWorker', 'getStatus', 'getFreeWorkersCount',
+        ];
+        if (in_array($name, $available) || substr($name, 0, 2) === 'do' || strpos($name, 'serialize') !== false) {
             return call_user_func_array([$this->queue, $name], $params);
         }
 
