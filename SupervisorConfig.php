@@ -31,7 +31,7 @@ class SupervisorConfig
      *
      * @var array
      */
-    public $workersConfig = [];
+    public $workersConfig = array();
     /**
      * Workers sets list:
      *
@@ -51,7 +51,7 @@ class SupervisorConfig
      *
      * @var array
      */
-    public $workersSets = [];
+    public $workersSets = array();
     /**
      * Number of seconds before supervisor will started again after config updating.
      * (Some times very big workers number require more time for restart)
@@ -74,7 +74,7 @@ class SupervisorConfig
     {
         $this->configFile = $configFile;
 
-        $this->defaultWorkerConfig = [
+        $this->defaultWorkerConfig = array(
             'command' => '',
             'process_name' => '%(program_name)s_%(process_num)02d',
             'numprocs' => 0,
@@ -85,7 +85,7 @@ class SupervisorConfig
             'autorestart' => 'true',
             'user' => 'www-data',
             'stopsignal' => 'KILL',
-        ];
+        );
     }
 
     /**
@@ -103,7 +103,7 @@ class SupervisorConfig
         static::stdout("\nWorkers sets:\n");
 
         $i = 0;
-        $setNumKeys = [];
+        $setNumKeys = array();
         foreach ($sets as $name => $config) {
             $i++;
             $setNumKeys[$i] = $name;
@@ -111,7 +111,7 @@ class SupervisorConfig
         }
 
         // Get number of selected set
-        $setNum = $this->prompt("\nChoise worker set:", ['required' => true]);
+        $setNum = $this->prompt("\nChoise worker set:", array('required' => true));
         if (!isset($setNumKeys[$setNum])) {
             static::stdout("Set '$setNum' not exists\n", static::FG_RED);
 
@@ -125,7 +125,7 @@ class SupervisorConfig
 
         static::stdout("\nActive workers:\n");
         // Generate config file lines
-        $lines = [];
+        $lines = array();
         foreach ($workers as $workerId => $config) {
             // Merge default config with custom worker config
             $resultConfig = array_merge($this->defaultWorkerConfig, $config);
@@ -231,15 +231,15 @@ class SupervisorConfig
      *
      * @return string the user input
      */
-    public static function prompt($text, $options = [])
+    public static function prompt($text, $options = array())
     {
-        $options = array_merge([
+        $options = array_merge(array(
             'required' => false,
             'default' => null,
             'pattern' => null,
             'validator' => null,
             'error' => 'Invalid input.',
-        ], $options);
+        ), $options);
         $error = null;
 
         top:
@@ -258,7 +258,7 @@ class SupervisorConfig
             static::stdout($options['error']);
             goto top;
         } elseif ($options['validator'] &&
-            !call_user_func_array($options['validator'], [$input, &$error])
+            !call_user_func_array($options['validator'], array($input, &$error))
         ) {
             static::stdout(isset($error) ? $error : $options['error']);
             goto top;

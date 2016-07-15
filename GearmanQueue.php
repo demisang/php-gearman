@@ -323,24 +323,24 @@ class GearmanQueue
         $command = "(echo status ; sleep 0.1) | netcat $this->host $this->port -w 1";
         $output = shell_exec($command);
         if (empty($output)) {
-            return [];
+            return array();
         }
 
-        $workers = [];
+        $workers = array();
         $lines = explode(PHP_EOL, $output);
         foreach ($lines as $line) {
-            $matches = [];
+            $matches = array();
             preg_match('/([\w]+)[^\d]+(\d+)\s+(\d+)\s+(\d+)/is', $line, $matches);
             if (!isset($matches[1], $matches[2], $matches[3], $matches[4])) {
                 continue;
             }
             list(, $workerName, $queuedJobs, $runningJobs, $availableWorkers) = $matches;
 
-            $workers[$workerName] = [
+            $workers[$workerName] = array(
                 'queued' => (int)$queuedJobs,
                 'running' => (int)$runningJobs,
                 'available' => (int)$availableWorkers,
-            ];
+            );
         }
 
         return $workers;
