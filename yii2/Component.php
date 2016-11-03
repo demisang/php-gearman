@@ -11,20 +11,7 @@ use demi\gearman\SupervisorConfig;
  * @property GearmanQueue $queue
  *
  * Magic methods
- * @method mixed runWorker() runWorker(string $jobName, callable $handler) Register new task handler
- * @method mixed getStatus() getStatus() Return workers array with info
- * @method mixed getFreeWorkersCount() getFreeWorkersCount(string $workerName) Get free workers count by worker name
- *
- * @method mixed doLow() doLow(string $taskName, Array $params = []) Runs a single low priority task
- * @method mixed doNormal() doNormal(string $taskName, Array $params = []) Runs a single task
- * @method mixed doHigh() doHigh(string $taskName, Array $params = []) Runs a single high priority task
- *
- * @method mixed doLowBackground() doLowBackground(string $taskName, Array $params = []) Runs a low priority task in the background
- * @method mixed doBackground() doBackground(string $taskName, Array $params = []) Runs a task in the background
- * @method mixed doHighBackground() doHighBackground(string $taskName, Array $params = []) Runs a high priority task in the background
- *
- * @method mixed serializeWorkload() serializeWorkload(Array $params = []) Serialize task params
- * @method mixed deserializeWorkload() deserializeWorkload(string $workload = []) Deserialize task params
+ * @mixin \demi\gearman\GearmanQueue
  */
 class Component extends \yii\base\Component
 {
@@ -126,10 +113,7 @@ class Component extends \yii\base\Component
      */
     public function __call($name, $params)
     {
-        $available = [
-            'runWorker', 'getStatus', 'getFreeWorkersCount',
-        ];
-        if (in_array($name, $available) || substr($name, 0, 2) === 'do' || strpos($name, 'serialize') !== false) {
+        if (method_exists($this->queue, $name)) {
             return call_user_func_array([$this->queue, $name], $params);
         }
 
