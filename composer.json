@@ -1,24 +1,14 @@
 {
     "name": "demi/php-gearman",
     "description": "Gearman job server workers helper",
-    "keywords": [
-        "php",
-        "gearman",
-        "job",
-        "server",
-        "workers",
-        "supervisor",
-        "Yii1",
-        "Yii2",
-        "Laravel"
-    ],
+    "keywords": ["php", "gearman", "job", "server", "workers", "supervisor", "Yii1", "Yii2", "Laravel"],
     "homepage": "https://github.com/demisang/php-gearman#readme",
     "type": "library",
-    "license": "GNU",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Ivan Orlov",
-            "email": "orlov_mail@mail.ru",
+            "email": "gnasimed@gmail.com",
             "homepage": "https://orlov.io/",
             "role": "Creator"
         }
