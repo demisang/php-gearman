@@ -37,7 +37,7 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
             return $component;
         });
 
-        $this->app['command.gearman'] = $this->app->share(
+        $this->app->singleton('command.gearman',
             function ($app) {
                 return new \demi\gearman\laravel5\Console\SupervisorCommand();
             }
@@ -47,9 +47,25 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function boot()
     {
-        $this->publishes(array(
-            __DIR__ . '/config/gearman.php' => config_path('gearman.php'),
-        ), 'config');
+        if (!$this->isLumen()) {
+            $this->publishes(array(
+                __DIR__ . '/config/gearman.php' => $this->config_path('gearman.php'),
+            ), 'config');
+        }
+    }
+
+    /**
+     * Get the configuration path.
+     *
+     * @param  string $path
+     * @return string
+     */
+    private function config_path($path = '')
+    {
+        if (!$this->isLumen()) {
+            return config_path($path);
+        }
+        return app()->basePath() . '/config' . ($path ? '/' . $path : $path);
     }
 
     /**
@@ -60,5 +76,13 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
     public function provides()
     {
         return array('gearman', 'command.gearman');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isLumen()
+    {
+        return str_contains($this->app->version(), 'Lumen');
     }
 }
