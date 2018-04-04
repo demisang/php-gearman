@@ -1,0 +1,17 @@
+#list of ignore files
+.idea
+.svn
+.git
+build/logs
+*.iml
+vendor/
+nbproject
+!.gitkeep
+composer.phar
+.DS_Store
+.env
+storage/proxies/*
+storage/app/*
+storage/framework/*
+storage/logs/*
+nbproject/
