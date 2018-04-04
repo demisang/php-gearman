@@ -25,17 +25,28 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            $this->config_path('gearman.php'), 'gearman'
+        );
+
         $this->app->singleton('gearman', function ($app) {
-            $component = new \demi\gearman\GearmanQueue(
-                config('gearman.host', '127.0.0.1'),
-                config('gearman.port', 4730),
-                config('gearman.servers', [])
-            );
+            if (!$this->isLumen()) {
+                $host = config('gearman.host', '127.0.0.1');
+                $port = config('gearman.port', 4730);
+                $servers = config('gearman.servers', []);
+            } else {
+                $gearman = $this->app['config']->get('gearman');
+                $host = !empty($gearman['host']) ? $gearman['host'] :'127.0.0.1';
+                $port = !empty($gearman['port']) ? $gearman['port'] :4730;
+                $servers = !empty($gearman['servers']) ? $gearman['servers'] : [];
+            }
+            $component = new \demi\gearman\GearmanQueue($host, $port, $servers);
             $component->beforeJobCallback = config('gearman.beforeJobCallback');
             $component->afterJobCallback = config('gearman.afterJobCallback');
 
             return $component;
         });
+
 
         $this->app->singleton('command.gearman',
             function ($app) {
@@ -48,9 +59,9 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         if (!$this->isLumen()) {
-            $this->publishes(array(
-                __DIR__ . '/config/gearman.php' => $this->config_path('gearman.php'),
-            ), 'config');
+            $this->publishes([
+                $this->getConfigPath() => config_path('gearman.php'),
+            ], 'config');
         }
     }
 
