@@ -11,6 +11,9 @@ return [
             [
                 'id' => 'some_work_id',
                 'name' => 'worker:some-name',
+                'generalNumber' => 5, // optional default value is 5
+                'minimalNumber' => 50, // optional default value is 50
+                'maximalNumber' => 100, // optional default value is 100
             ]
 
         ]

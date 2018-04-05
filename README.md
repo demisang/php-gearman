@@ -7,7 +7,7 @@ Installation
 ------------
 * Run:
 ```code
-composer require "contrictor/php-gearman" "~1.0"
+composer require "demi/php-gearman" "~1.0"
 ```
 * Install gearman job server as PHP-extension: http://gearman.org/getting-started/#gearman_php_extension<br />
 * Install supervisor:
@@ -53,7 +53,7 @@ return [
 ```php
 'components' => [
     'gearman' => [
-        'class' => '\contrictor\gearman\yii2\Component',
+        'class' => '\demi\gearman\yii2\Component',
         'host' => '127.0.0.1',
         'port' => 4730,
         'supervisorConfig' => require(__DIR__ . '/supervisor.php'),
@@ -65,7 +65,7 @@ return [
 return [
     'controllerMap' => [
         'gearman' => [
-            'class' => '\contrictor\gearman\yii2\SupervisorController',
+            'class' => '\demi\gearman\yii2\SupervisorController',
             'gearmanComponentName' => 'gearman', // name of component: Yii::$app->gearman (from previous config listing)
         ],
     ],
@@ -78,7 +78,7 @@ return [
 ```php
 'components' => [
     'gearman' => [
-        'class' => '\contrictor\gearman\yii1\GearmanComponent',
+        'class' => '\demi\gearman\yii1\GearmanComponent',
         'host' => '127.0.0.1',
         'port' => 4730,
         'supervisorConfig' => require(__DIR__ . '/supervisor.php'),
@@ -91,7 +91,7 @@ $mainConfig = require(dirname(__FILE__) . '/main.php');
 return [
     'commandMap' => [
         'gearman' => [
-            'class' => '\contrictor\gearman\yii1\SupervisorCommand',
+            'class' => '\demi\gearman\yii1\SupervisorCommand',
             'gearmanComponentName' => 'gearman', // name of component: Yii::app()->gearman (from previous config listing)
         ],
     ],
@@ -106,17 +106,17 @@ Add service provider to /config/app.php:
 ```php
 'providers' => [
     // Gearman helper
-    contrictor\gearman\laravel5\GearmanServiceProvider::class
+    demi\gearman\laravel5\GearmanServiceProvider::class
 ],
 'aliases' => [
     // Gearman helper
-    'Gearman' => contrictor\gearman\laravel5\GearmanFacade::class,
+    'Gearman' => demi\gearman\laravel5\GearmanFacade::class,
 ],
 ```
 
 Publish /config/gearman.php
 ```bash
-php artisan vendor:publish --provider="contrictor\gearman\laravel5\GearmanServiceProvider" --tag=config
+php artisan vendor:publish --provider="demi\gearman\laravel5\GearmanServiceProvider" --tag=config
 ```
 
 
