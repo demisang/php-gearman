@@ -36,11 +36,41 @@ class SupervisorCommand extends \Illuminate\Console\Command
     public function fire()
     {
         $config = config('gearman.supervisorConfig');
+        $commandConfigs = $this->supervisorConfigsCommands($config['commandConfigs']);
         $supervisor = new SupervisorConfig($config['configFile'], $config['workersDirectory']);
         $supervisor->restartSleepingTime = $config['restartSleepingTime'];
-        $supervisor->workersConfig = $config['all'];
-        $supervisor->workersSets = $config['sets'];
+        $supervisor->workersConfig = $commandConfigs['all'];
+        $supervisor->workersSets = $commandConfigs['sets'];
 
         $supervisor->requestUpdate();
     }
+
+    /**
+     * @param $arrConfis
+     * @return array
+     */
+    private function supervisorConfigsCommands($arrConfis)
+    {
+        $all = [];
+        $general = [];
+        $minimal = [];
+        $maximal = [];
+
+        foreach ($arrConfis as $config) {
+            $all[$config['id']] =  ['numprocs' => 0, 'command' => 'php artisan ' . $config['name']];
+            $general[$config['id']] = !empty($config['generalNumber']) ? $config['generalNumber'] : 5;
+            $minimal[$config['id']] = !empty($config['minimalNumber']) ? $config['minimalNumber'] : 50;
+            $maximal[$config['id']] = !empty($config['minimalMaximal']) ? $config['minimalMaximal'] : 100;
+        }
+
+        return [
+            'all' => $all,
+            'sets' => [
+                'general' => $general,
+                'minimal' => $minimal,
+                'maximal' => $maximal,
+            ],
+        ];
+    }
+
 }
