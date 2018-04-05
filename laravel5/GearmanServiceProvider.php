@@ -25,19 +25,30 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            $this->config_path('gearman.php'), 'gearman'
+        );
+
         $this->app->singleton('gearman', function ($app) {
-            $component = new \demi\gearman\GearmanQueue(
-                config('gearman.host', '127.0.0.1'),
-                config('gearman.port', 4730),
-                config('gearman.servers', [])
-            );
+            if (!$this->isLumen()) {
+                $host = config('gearman.host', '127.0.0.1');
+                $port = config('gearman.port', 4730);
+                $servers = config('gearman.servers', []);
+            } else {
+                $gearman = $this->app['config']->get('gearman');
+                $host = !empty($gearman['host']) ? $gearman['host'] :'127.0.0.1';
+                $port = !empty($gearman['port']) ? $gearman['port'] :4730;
+                $servers = !empty($gearman['servers']) ? $gearman['servers'] : [];
+            }
+            $component = new \demi\gearman\GearmanQueue($host, $port, $servers);
             $component->beforeJobCallback = config('gearman.beforeJobCallback');
             $component->afterJobCallback = config('gearman.afterJobCallback');
 
             return $component;
         });
 
-        $this->app['command.gearman'] = $this->app->share(
+
+        $this->app->singleton('command.gearman',
             function ($app) {
                 return new \demi\gearman\laravel5\Console\SupervisorCommand();
             }
@@ -47,9 +58,25 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function boot()
     {
-        $this->publishes(array(
-            __DIR__ . '/config/gearman.php' => config_path('gearman.php'),
-        ), 'config');
+        if (!$this->isLumen()) {
+            $this->publishes([
+                $this->getConfigPath() => config_path('gearman.php'),
+            ], 'config');
+        }
+    }
+
+    /**
+     * Get the configuration path.
+     *
+     * @param  string $path
+     * @return string
+     */
+    private function config_path($path = '')
+    {
+        if (!$this->isLumen()) {
+            return config_path($path);
+        }
+        return app()->basePath() . '/config' . ($path ? '/' . $path : $path);
     }
 
     /**
@@ -60,5 +87,13 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
     public function provides()
     {
         return array('gearman', 'command.gearman');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isLumen()
+    {
+        return str_contains($this->app->version(), 'Lumen');
     }
 }
