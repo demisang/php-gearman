@@ -1,24 +1,29 @@
 {
-    "name": "demi/php-gearman",
-    "description": "Gearman job server workers helper",
+    "name": "contrictor/php-gearman",
+    "description": "Gearman job server workers helper forked from https://github.com/pauloborgesccb/php-gearman",
     "keywords": ["php", "gearman", "job", "server", "workers", "supervisor", "Yii1", "Yii2", "Laravel"],
-    "homepage": "https://github.com/demisang/php-gearman#readme",
+    "homepage": "https://github.com/pauloborgesccb/php-gearmann#readme",
     "type": "library",
     "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Ivan Orlov",
-            "email": "gnasimed@gmail.com",
+            "email": "contrictorhkss@gmail.com",
             "homepage": "https://orlov.io/",
             "role": "Creator"
+        },
+        {
+            "name": "Paulo Borges",
+            "email": "contrictorhkss@gmail.com",
+            "role": "Forker"
         }
     ],
     "support": {
-        "issues": "https://github.com/demisang/php-gearman/issues",
-        "source": "https://github.com/demisang/php-gearman"
+        "issues": "https://github.com/pauloborgesccb/php-gearman/issues",
+        "source": "https://github.com/pauloborgesccb/php-gearman"
     },
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.6.0"
     },
     "autoload": {
         "psr-4": {
