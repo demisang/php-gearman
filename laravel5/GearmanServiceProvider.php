@@ -37,8 +37,8 @@ class GearmanServiceProvider extends \Illuminate\Support\ServiceProvider
             return $component;
         });
 
-        $this->app['command.gearman'] = $this->app->share(
-            function ($app) {
+        //$this->app['command.gearman'] = $this->app->share(
+        $this->app->singleton('command.gearman',function ($app) {
                 return new \demi\gearman\laravel5\Console\SupervisorCommand();
             }
         );
